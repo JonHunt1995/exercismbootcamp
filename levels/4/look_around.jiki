@@ -1,0 +1,32 @@
+function is_safe with direction do
+  return look(direction) == "empty" or look(direction) == "target" or look(direction) == "start"
+end
+function can_turn_left do
+  return is_safe("left")
+end
+function can_move do
+  return is_safe("ahead")
+end
+function can_turn_right do
+  return is_safe("right")
+end
+
+function turn_around do
+  turn_right()
+  turn_right()
+end
+
+repeat_until_game_over do
+  if can_turn_left() do
+    turn_left()
+    move()
+  else if can_move() do
+    move()
+  else if can_turn_right() do
+    turn_right()
+    move()
+  else do
+    turn_around()
+    move()
+  end
+end

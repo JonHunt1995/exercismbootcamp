@@ -1,0 +1,21 @@
+// The shopping_list function takes two inputs 
+// first is a list of strings called contents
+//second is a recipe_items (also list of strings)
+// and returns a list of strings of what you need to buy
+function shopping_list with contents, recipe_items do
+  set shopping_list to []
+  set found to false
+  for each item in recipe_items do
+  change found to false
+    for each content in contents do
+      if item == content do 
+        change found to true
+      end
+    end
+    if !found do
+      change shopping_list to push(shopping_list, item)
+      log shopping_list
+    end
+  end
+  return shopping_list
+end

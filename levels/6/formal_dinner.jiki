@@ -1,0 +1,46 @@
+// Length function
+function length with input_string do
+  set length to 0
+  for each letter in input_string do
+    change length to length + 1
+  end
+  return length
+end
+// ends_with function
+function remove_first_word with phrase do
+  set stripped_phrase to ""
+  set encountered_space to false
+  for each letter in phrase do
+    if encountered_space do
+      change stripped_phrase to join(stripped_phrase, letter)
+    end
+    if letter == " " do 
+      change encountered_space to true
+    end
+  end
+  return stripped_phrase
+end
+function ends_with with string, substring do
+  if length(string) < length(substring) do
+    return false
+  end
+  set index to 1
+  set offset to length(string) - length(substring)
+  for each letter in substring do
+    if letter != string[index + offset] do
+      return false
+    end
+  change index to index + 1
+  end
+  return true
+end
+
+// The on_guest_list function
+function on_guest_list with guest_list, formal_name do
+  for each guest in guest_list do
+    if ends_with(guest, remove_first_word(formal_name)) do
+      return true
+    end
+  end
+  return false
+end

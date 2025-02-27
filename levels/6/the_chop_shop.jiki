@@ -1,0 +1,25 @@
+// The can_fit_in function takes in 3 inputs:
+// 1st being the queue haircut_queue (list of strings),
+// 2nd being requested_haircut (string)
+// 3rd being time_left_in_day (number)
+function can_fit_in with haircut_queue, requested_haircut, time_left_in_day do
+  set time_per_hairstyle to [["Mohawk", 20], ["Slicked-Back Pixie", 15], ["Bob", 25], ["Shave and Polish", 15], ["Afro Trim", 45], ["Up-do", 30]]
+  set style to 1
+  set time to 2
+  set time_to_finish_queue to 0
+  set time_to_finish_haircut to 0
+  for each customer in haircut_queue do
+    for each hairstyle in time_per_hairstyle do
+      if customer == hairstyle[style] do
+        change time_to_finish_queue to time_to_finish_queue + hairstyle[time]
+      end
+    end
+  end
+  log time_to_finish_queue
+  for each hairstyle in time_per_hairstyle do
+    if requested_haircut == hairstyle[style] do
+      change time_to_finish_haircut to hairstyle[time]
+    end
+  end
+  return time_to_finish_queue + time_to_finish_haircut <= time_left_in_day
+end

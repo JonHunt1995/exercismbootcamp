@@ -1,0 +1,8 @@
+// The two_fer function takes in a name and puts out a sentence
+// in the format of "One for {name}, one for me
+function two_fer with name do
+  if name == "" do
+    change name to "you"
+  end
+  return concatenate("One for ", name, ", one for me.")
+end

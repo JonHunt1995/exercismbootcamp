@@ -1,0 +1,19 @@
+// Receives a number as its input
+// Should return the number of steps to reach 1
+function collatz_steps with number do
+  set steps to 0
+  repeat_forever do
+    // Once we hit 1, we have successfully counted the number of steps
+    if number == 1 do
+      return steps
+    // Otherwise for even numbers we divide by 2
+    else if number % 2 == 0 do
+      change number to number / 2
+    else do
+    // And for odd numbers we multiply by 3 and add 1
+      change number to 3 * number + 1
+    end
+    // For each loop cycle we increment the counter
+    change steps to steps + 1
+  end
+end

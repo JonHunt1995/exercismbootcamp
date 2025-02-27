@@ -1,0 +1,80 @@
+// Code for Sunny Day
+function draw_sunny_day do
+  // Draw the sky
+  fill_color_hex("#ADD8E6") 
+  rectangle(0, 0, 100, 100)
+  // Draw the sun
+  fill_color_hex("#ffed06")
+  circle(50,50,25)
+end
+// Partially Sunny
+function draw_partial_sun do
+  
+  fill_color_hex("#ffed06")
+  circle(75, 30, 15)
+end
+  // Clouds
+function draw_clouds do
+  fill_color_hex("white")
+  circle(55, 40, 20)
+  circle(40, 40, 15)
+  circle(25, 50, 10)
+  circle(75, 50, 10)
+  rectangle(25, 50, 50, 10)
+end
+  // Rain Drops
+function draw_rain do
+  fill_color_hex("#4287f5")
+  ellipse(30, 70, 3, 5)
+  ellipse(40, 80, 3, 5)
+  ellipse(50, 70, 3, 5)
+  ellipse(60, 80, 3, 5)
+  ellipse(70, 70, 3, 5)
+end
+// Snow
+function draw_snow do
+  fill_color_hex("#4287f5")
+  circle(30, 70, 5)
+  circle(40, 80, 5)
+  circle(50, 70, 5)
+  circle(60, 80, 5)
+  circle(70, 70, 5)
+end
+// The description_to_elements function takes in a description
+// and outputs weather elements
+function description_to_elements with weather_description do
+  set description to 1
+  set elements to 2
+  set description_to_elems_map to [["sunny", ["sun"]], ["dull", ["cloud"]],["miserable", ["cloud", "rain"]], ["hopeful", ["sun", "cloud"]], ["rainbow-territory", ["sun", "cloud", "rain"]], ["exciting", ["cloud", "snow"]], ["snowboarding-time", ["sun", "cloud", "snow"]]]
+  for each pair in description_to_elems_map do
+    if pair[description] == weather_description do
+      return pair[elements]
+    end
+  end
+end
+// The draw_weather function takes in a description string
+// and outputs a weather scene
+function draw_weather with description do 
+  if description == "sunny" do
+    draw_sunny_day()
+  else if description == "dull" do
+    draw_clouds()
+  else if description == "miserable" do
+    draw_clouds()
+    draw_rain()
+  else if description == "hopeful" do
+    draw_partial_sun()
+    draw_clouds()
+  else if description == "rainbow-territory" do
+    draw_partial_sun()
+    draw_clouds()
+    draw_rain()
+  else if description == "exciting" do
+    draw_clouds()
+    draw_snow()
+  else if description == "snowboarding-time" do
+    draw_partial_sun()
+    draw_clouds()
+    draw_snow()
+  end
+end

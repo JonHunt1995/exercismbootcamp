@@ -1,0 +1,12 @@
+// The description_to_elements function takes in a description
+// and outputs weather elements
+function description_to_elements with weather_description do
+  set description to 1
+  set elements to 2
+  set description_to_elems_map to [["sunny", ["sun"]], ["dull", ["cloud"]],["miserable", ["cloud", "rain"]], ["hopeful", ["sun", "cloud"]], ["rainbow-territory", ["sun", "cloud", "rain"]], ["exciting", ["cloud", "snow"]], ["snowboarding-time", ["sun", "cloud", "snow"]]]
+  for each pair in description_to_elems_map do
+    if pair[description] == weather_description do
+      return pair[elements]
+    end
+  end
+end

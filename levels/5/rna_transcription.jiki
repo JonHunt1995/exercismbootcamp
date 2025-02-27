@@ -1,0 +1,18 @@
+// The dna_to_rna function will convert
+// from one base to its complementary base
+function dna_to_rna with dna_strand do
+  set dna to "GCTA"
+  set rna to "CGAU"
+  set rna_strand to ""
+  set index to 1
+  for each letter in dna_strand do
+    change index to 1
+    repeat 4 times do
+      if letter == dna[index] do
+        change rna_strand to join(rna_strand, rna[index])
+      end
+      change index to index + 1
+    end
+  end
+  return rna_strand
+end

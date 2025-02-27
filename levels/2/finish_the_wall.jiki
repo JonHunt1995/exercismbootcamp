@@ -1,0 +1,10 @@
+fill_color_hex("#AA4A44")
+set x to 0
+set y to 0
+set brick_height to 10
+set brick_width to 20
+
+repeat 5 times do
+  rectangle(x, y, brick_width, brick_height)
+  change x to x + brick_width
+end

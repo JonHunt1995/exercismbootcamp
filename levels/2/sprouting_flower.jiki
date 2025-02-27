@@ -1,0 +1,47 @@
+//Set your initial variables here
+//Flower Variables
+set flower_x to 50
+set flower_y to 90
+set ground_height to 90
+set flower_radius to 0
+set flower_radius_increment to 0.4
+// Pistil Variables
+set pistil_radius to 0
+set pistil_radius_increment to 0.1
+//Stem Variables
+set stem_height to ground_height  - flower_radius
+set stem_width to stem_height / 10
+set x_radius to flower_radius * 0.5
+set y_radius to flower_radius * 0.2
+// Draw flower
+repeat 60 times do
+  // Update Variables
+  change flower_y to flower_y - 1
+  change flower_radius to flower_radius + flower_radius_increment
+  change pistil_radius to pistil_radius + pistil_radius_increment
+  change stem_height to ground_height  - flower_y
+  change stem_width to stem_height / 10
+  change x_radius to flower_radius * 0.5
+  change y_radius to flower_radius * 0.2
+  // Draw the Sky
+  fill_color_hex("#ADD8E6") 
+  rectangle(0, 0, 100, 90)
+  
+  // Draw the Ground
+  fill_color_hex("green")
+  rectangle(0, 90, 100, 30)
+
+  // Draw the stem
+  fill_color_hex("green")
+  rectangle(flower_x - (stem_width / 2), flower_y, stem_width, stem_height)
+  // Draw leaves
+  ellipse(flower_x - x_radius - (stem_width / 2), flower_y + (stem_height / 2), x_radius, y_radius)
+  ellipse(flower_x + x_radius + (stem_width / 2), flower_y + (stem_height / 2), x_radius, y_radius)
+
+// Draw the flower
+  fill_color_hex("violet")
+  circle(flower_x, flower_y, flower_radius)
+// Draw the pistil
+  fill_color_hex("yellow")
+  circle(flower_x, flower_y, pistil_radius)
+end

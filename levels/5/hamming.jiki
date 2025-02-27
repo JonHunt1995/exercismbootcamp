@@ -1,0 +1,13 @@
+// The hamming_distance function finds the amount
+// of differences between 2 DNA strands
+function hamming_distance with first_strand, second_strand do
+  set count to 0
+  set i to 1
+  for each letter in first_strand do
+    if letter != second_strand[i] do
+      change count to count + 1
+    end
+    change i to i + 1
+    end
+    return count
+end

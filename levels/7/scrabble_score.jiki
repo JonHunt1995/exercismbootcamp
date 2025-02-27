@@ -1,0 +1,55 @@
+function upper with letter do
+  set lower_letters to "abcdefghijklmnopqrstuvwxyz"
+  set capital_letters to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  if !contains(lower_letters, letter) do
+    return letter
+  end
+  return capital_letters[index(lower_letters, letter)]
+end
+
+function letter_values do
+  set values to [
+    ["AEIOULNRST", 1],
+    ["DG", 2],
+    ["BCMP", 3],
+    ["FHVWY", 4],
+    ["K", 5],
+    ["JX", 8],
+    ["QZ", 10]
+  ]
+  set letter_values to {}
+  for each value in values do
+    for each letter in value[1] do
+      change letter_values[letter] to value[2]
+    end
+  end
+  return letter_values
+end
+
+log letter_values()
+
+function index with iterable, target do
+  for each item in iterable indexed by counter do
+    if item == target do
+      return counter
+    end
+  end
+  return -1
+end
+
+function contains with iterable, target do
+  for each item in iterable do
+    if item == target do
+      return true
+    end
+  end
+  return false
+end
+function scrabble_score with word do
+  set letter_values to letter_values()
+  set score to 0
+  for each letter in word do
+    change score to score + letter_values[upper(letter)]
+  end
+  return score
+end

@@ -1,0 +1,63 @@
+// the is_alien_above function returns true if there's an alien above
+set first_row to get_starting_aliens_in_row(1)
+set second_row to get_starting_aliens_in_row(2)
+set third_row to get_starting_aliens_in_row(3)
+set rows to [first_row, second_row, third_row]
+function is_alien_above with position, rows do 
+  for each row in rows do
+    if row[position] do
+      return true
+    end
+  end
+  return false
+end
+function check_if_all_clear with rows do
+  for each row in rows do
+    for each alien in row do
+      if alien do
+        return false
+      end
+    end
+  end
+  return true
+end
+// Set variables about facts
+set left_boundary to 1
+set right_boundary to 11
+
+// Set variables to track things
+set direction to "right"
+set position to 1
+// Play the game
+repeat_until_game_over do
+  if is_alien_above(position, rows) do
+    shoot()
+    if first_row[position] do
+      change first_row[position] to false
+    else if second_row[position] do
+      change second_row[position] to false
+    else do
+      change third_row[position] to false
+    end
+  end
+   
+  // If we hit an edge, change direction
+  if position >= right_boundary do
+    change direction to "left"
+  else if position <= left_boundary do
+    change direction to "right"
+  end
+
+  // Move along
+  if direction is "right" do
+    move_right()
+    change position to position + 1
+  else if direction is "left" do
+    move_left()
+    change position to position - 1
+  end
+
+  if check_if_all_clear(rows) do
+    fire_fireworks()
+  end
+end

@@ -1,0 +1,12 @@
+// The did_they_pass function
+function did_they_pass with scores do
+  set mistakes to 0
+  for each score in scores do
+    if score == "💥" do
+      return false
+    else if score == "❌" do
+      change mistakes to mistakes + 1
+    end
+  end
+  return mistakes < 5
+end

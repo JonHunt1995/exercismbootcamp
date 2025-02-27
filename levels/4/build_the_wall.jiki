@@ -1,0 +1,43 @@
+// Set Initial Variables
+fill_color_hex("#AA4A44")
+set y to 100 - 10
+set layer_number to 1
+// Lays down a layer of bricks with an x and a size parameter
+function lay_down_layer_of_bricks with x, y, size do 
+  // Set brick dimension variables
+  set brick_height to 10
+  set brick_width to 20
+  repeat size times do
+    rectangle(x, y, brick_width, brick_height)
+    change x to x + brick_width
+  end
+end
+// Lay five full bricks 
+function lay_even_layer_bricks with y do
+  set x to 0
+  lay_down_layer_of_bricks(x, y, 5)
+end
+// Lay six full sized bricks with the two outer bricks overhanging by half a brick_width
+function lay_odd_layer_bricks with y do
+  set x to -10
+  lay_down_layer_of_bricks(x, y, 6)
+end
+
+function lay_brick with layer_number, y  do
+  // Lay 5 bricks on even layers
+  if layer_number % 2 == 0 do
+    lay_even_layer_bricks(y)
+  // And 6 bricks with overhang on odd layers
+  else do
+    lay_odd_layer_bricks(y)
+  end
+end
+
+repeat 10 times do
+  lay_brick(layer_number, y)
+  // Iterate the number of layers after one is laid down
+  change layer_number to layer_number + 1
+  // Move down by one brick_height once a layer is laid down
+  change y to y - 10
+end
+  

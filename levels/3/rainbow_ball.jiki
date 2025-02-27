@@ -1,0 +1,37 @@
+//Set variables
+// Remember that if the variables are updated at the 
+// start of the repeat loop, then need to start lower here.
+set x to 5
+set y to 5
+set ball_radius to 10
+set hue to 100
+set sat to 80
+set lum to 50
+set x_delta to 2
+set y_delta to 1
+set hue_delta to 1
+set random_num to 1
+set random_delta to 0.1
+
+
+repeat 700 times do
+  // Draw the circle
+  fill_color_hsl(hue, sat, lum)
+  circle(x, y, ball_radius)
+  // Update variables
+  change x to x + x_delta
+  change y to y + y_delta
+  change hue to hue + hue_delta
+  change random_num to random_number(1 - random_delta, 1 + random_delta)
+  // Add Bouncing Logic
+  if x >= 100 or x <= 0 do
+    change x_delta to -x_delta * random_num
+  end
+  if y >= 100 or y <= 0 do
+    change y_delta to -y_delta * random_num
+  end
+if hue_delta > 254 do
+  change hue_delta to -hue_delta
+end
+  
+end

@@ -1,0 +1,30 @@
+// Set any initial variables here
+set left_x to 0
+set laser_width to 25
+set has_not_shot to true
+set direction to "left"
+set stage_width to 260
+repeat_until_game_over do
+  // Ensure that laser cannon doesn't overheat by only shooting once
+  if is_alien_above() and has_not_shot do
+    shoot()
+    change has_not_shot to false
+  end
+  // If laser is close to the right edge, set direction to left
+  if left_x + laser_width >= stage_width do
+    change direction to "left"
+  // If laser is clode to the left edge, set direction to right
+  else if left_x <= 1 do
+    change direction to "right"
+  end
+  // Have laser cannon move in direction with the direction string
+  if direction == "left" do 
+    change left_x to left_x - laser_width
+    change has_not_shot to true
+    move_left()
+  else if direction == "right" do
+    change has_not_shot to true
+    change left_x to left_x + laser_width
+    move_right()  
+  end
+end

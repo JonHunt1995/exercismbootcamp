@@ -1,0 +1,18 @@
+// Use the current_time_hour() and
+// current_time_minute() functions to get the 
+// current time and minutes for the scenario.
+set hours to current_time_hour()
+set minutes to current_time_minute()
+set meridien to "am"
+// Convert the hour into "12 hour" format and 
+// determine whether it's "am" or "pm".
+if hours == 0 do
+  change hours to hours + 12
+else if hours == 12 do
+  change meridien to "pm"
+else if hours > 12 do
+  change hours to hours - 12
+  change meridien to "pm"
+end
+// Use display_time to update the clock
+display_time(hours, minutes, meridien)

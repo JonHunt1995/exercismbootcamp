@@ -1,0 +1,64 @@
+function index with iterable, target do
+  for each item in iterable indexed by counter do
+    if item == target do
+      return counter
+    end
+  end
+  return -1
+end
+
+function to_lower with letter do
+  set lower_letters to "abcdefghijklmnopqrstuvwxyz"
+  set capital_letters to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  if !contains(capital_letters, letter) do
+    return letter
+  end
+  return lower_letters[index(capital_letters, letter)]
+end
+
+function len with enumerable do
+  set length to 0
+  for each element in enumerable do
+    change length to length + 1
+  end
+  return length
+end
+
+function contains with iterable, target do
+  for each item in iterable do
+    if item == target do
+      return true
+    end
+  end
+  return false
+end
+
+function split with phrase, separator do 
+  set words to []
+  set word to ""
+  for each letter in phrase indexed by counter do
+    if !contains(separator, letter) do
+      change word to join(word, to_lower(letter))
+    end
+    if counter == len(phrase) or contains(separator, letter) do
+      if word == "" do
+        continue
+      end
+      change words to push(words, word) 
+      change word to ""
+    end
+  end
+  return words
+end
+// TODO: Define the count_words function
+function count_words with phrase do
+  set words to split(phrase, " ,:;!&@$%^&.") 
+  set word_count to {}
+  for each word in words do
+    if !has_key(word_count, word) do
+      change word_count[word] to 0
+    end
+    change word_count[word] to word_count[word] + 1
+  end
+  return word_count
+end

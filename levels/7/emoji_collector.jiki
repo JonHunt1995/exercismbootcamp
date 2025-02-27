@@ -1,0 +1,34 @@
+// The translate_rna function
+function translate_rna with sequence do
+  set translated to []
+  set codon to ""
+  set codon_map to {
+    "AUG": "Methionine",
+    "UUU": "Phenylalanine",
+    "UUC": "Phenylalanine",
+    "UUA": "Leucine",
+    "UUG": "Leucine",
+    "UCU": "Serine",
+    "UCC": "Serine",
+    "UCA": "Serine",
+    "UCG": "Serine",
+    "UAU": "Tyrosine",
+    "UAC": "Tyrosine",
+    "UGU": "Cysteine",
+    "UGG": "Tryptophan",
+    "UAA": "STOP",
+    "UAG": "STOP",
+    "UGA": "STOP"
+  }
+  for each base in sequence indexed by counter do
+    change codon to join(codon, base)
+    if counter % 3 == 0 do
+      if codon_map[codon] == "STOP" do
+        break
+      end
+      change translated to push(translated, codon_map[codon])
+      change codon to ""
+    end
+  end
+  return translated
+end

@@ -1,0 +1,50 @@
+function len with iterable do
+  set length to 0
+  for each item in iterable do
+    change length to length + 1
+  end
+  return length
+end
+
+function contains with iterable, target do
+  for each item in iterable do
+    if item == target do
+      return true
+    end
+  end
+  return false
+end
+
+function remove_letter with letters, removed_letter do
+  set output to ""
+  for each letter in letters do
+    if letter != removed_letter do 
+      change output to join(output, letter)
+    end
+  end
+  return output
+end
+
+log remove_letter("Jon", "o")
+function to_upper with input_letter do
+  set lower_letters to "abcdefghijklmnopqrstuvwxyz"
+  set capital_letters to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  for each letter in lower_letters indexed by counter do
+    if letter == input_letter do
+      return capital_letters[counter]
+    end
+  end
+  return input_letter
+end
+
+// The is_pangram function
+function is_pangram with phrase do
+  set alphabet to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  set unused_letters to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  for each letter in phrase do
+    if contains(alphabet, to_upper(letter)) do
+      change unused_letters to remove_letter(unused_letters, to_upper(letter))
+    end
+  end
+  return len(unused_letters) == 0
+end

@@ -1,0 +1,55 @@
+// Helper function for is_triangle_invalid
+function find_largest_side with side_1, side_2, side_3 do
+  if side_1 >= side_2 and side_1 >= side_3 do
+    return side_1
+  end
+  if side_2 >= side_3 and side_2 >= side_1 do
+    return side_2
+  end
+  return side_3
+end
+// Helper function for is_triangle_invalid
+function sum_of_smaller_sides with side_1, side_2, side_3 do
+  set sum to -find_largest_side(side_1, side_2, side_3)
+  change sum to sum + side_1
+  change sum to sum + side_2
+  change sum to sum + side_3
+  return sum
+end
+  
+// A triangle is invalid if any side is 0
+// or the sum of the smaller sides is not greater than the largest side
+// Because theni it would just be a line
+function is_triangle_invalid with side_1, side_2, side_3 do
+  if side_1 == 0 or side_2 == 0 or side_3 == 0 do
+    return true
+  end
+  if find_largest_side(side_1, side_2, side_3) >= sum_of_smaller_sides(side_1, side_2, side_3) do
+    return true
+  end
+  return false
+end
+
+// Checks to see if all sides are the same
+function is_triangle_equilateral with side_1, side_2, side_3 do
+  return side_1 == side_2 and side_2 == side_3
+end
+
+// Checks to see if all sides are differet
+function is_triangle_scalene with side_1, side_2, side_3 do
+  return side_1 != side_2 and side_2 != side_3 and side_1 != side_3
+end
+
+function determine_triangle_type with side_1, side_2, side_3 do
+  if is_triangle_invalid(side_1, side_2, side_3) do
+    return "invalid"
+  else if is_triangle_equilateral(side_1, side_2, side_3) do
+    return "equilateral"
+  else if is_triangle_scalene(side_1, side_2, side_3) do
+    return "scalene"
+  // If it's a valid triangle that's not equilateral or scalene,
+  // then it must be isosceles
+  else do
+    return "isosceles"
+  end
+end

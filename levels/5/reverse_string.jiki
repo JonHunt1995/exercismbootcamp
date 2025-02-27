@@ -1,0 +1,10 @@
+// The reverse function takes in a string as an input
+// And puts out a reversed string
+// By adding letters to an empty string
+function reverse with input_string do
+  set reversed_string to ""
+  for each letter in input_string do
+    change reversed_string to join(letter, reversed_string)
+  end
+  return reversed_string
+end

@@ -1,0 +1,23 @@
+// The acronym function takes a sentence and returns a string of the first letters
+function acronym with sentence do
+  set after_sep to true
+  set acronym to ""
+  set capitals to to_upper_case("abcdefghijklmnopqrstuvwxyz")
+  set is_letter to false
+  for each letter in sentence do
+    change is_letter to false
+    for each capital in capitals do
+      if to_upper_case(letter) == capital do
+        change is_letter to true
+        end
+    end
+    if letter == " " or letter == "-" do
+      change after_sep to true
+    end
+    if after_sep and is_letter do 
+      change acronym to join(acronym, to_upper_case(letter))
+      change after_sep to false
+    end
+  end
+  return acronym
+end

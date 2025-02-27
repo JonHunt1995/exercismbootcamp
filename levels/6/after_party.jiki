@@ -1,0 +1,41 @@
+// length function returns length of string
+function length with input do
+  set length to 0
+  for each letter in input do
+    change length to length + 1
+  end
+  return length
+end
+
+// starts_with function returns true if a given string 
+// starts with a given substring and has a space right after
+function starts_with with string, substring do
+  set counter to 1
+  if length(substring) > length(string) do 
+    return false 
+  else if string == substring do
+    return true
+  end
+  for each letter in substring do
+    if letter != string[counter] do
+      return false
+    end
+  change counter to counter + 1
+  
+  end
+  if string[counter] != " " do
+    return false
+  end
+  return true
+end
+
+
+// The on_guest_list function
+function on_guest_list with guest_list, name do
+  for each guest in guest_list do
+    if starts_with(guest, name) do
+      return true
+    end
+  end
+  return false
+end

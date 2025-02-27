@@ -1,0 +1,12 @@
+// The count_nucleotides function takes in a dna sequence as a string
+// And returns the nucleotide ounts as an output
+function count_nucleotides with sequence do
+  set base_counter to {"A": 0, "C": 0, "G": 0, "T": 0}
+  for each base in sequence do
+    if base != "A" and base != "C" and base != "G" and base != "T" do
+      return false
+    end
+    change base_counter[base] to base_counter[base] + 1
+  end
+  return base_counter
+end

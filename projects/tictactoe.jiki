@@ -1,0 +1,9 @@
+function draw_board do
+  
+end
+function run_game with moves do
+  log moves
+  if is_move_valid(moves) do
+    play(moves)
+  end
+end

@@ -54,17 +54,14 @@ function description_to_elements with weather_description do
     end
   end
 end
-function extract_response_data with json_data do
-  set descriptions to 
+function extract_description with json_data, index do
   set summary to json_data["meteorological"]["2025"]["02"]["25"]["weather"]["summary"]
-  for each scenario in summary do
-    change descriptions to 
-  end
-  return directions
+  return summary[index]["description"]
 end
 // The draw_weather function takes in a description string
 // and outputs a weather scene
-function draw_weather with description do 
+function draw_weather with json_data do 
+  set description to extract_description(json_data, 1)
   log description
   if description == "sunny" do
     draw_sunny_day()

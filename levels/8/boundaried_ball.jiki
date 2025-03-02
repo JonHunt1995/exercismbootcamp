@@ -1,0 +1,26 @@
+
+function hit_x_boundary with ball do
+  return ball.cx - ball.radius <= 0 or ball.cx + ball.radius >= 100
+end
+function hit_y_boundary with ball do
+  return ball.cy - ball.radius <= 0 or ball.cy + ball.radius >= 100
+end
+function bounce with ball do
+  if hit_x_boundary(ball) do
+    change ball.x_velocity to -ball.x_velocity
+  end
+  if hit_y_boundary(ball) do
+    change ball.y_velocity to -ball.y_velocity
+  end
+end
+set ball to new Ball()
+log ball.cx
+log ball.cy
+change ball.x_velocity to 1
+change ball.y_velocity to 1
+repeat 376 times do
+  bounce(ball)
+  move_ball(ball)
+end
+log ball.cx
+log ball.cy

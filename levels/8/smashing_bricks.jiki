@@ -1,0 +1,70 @@
+
+function hit_x_boundary with ball do
+  return ball.cx - ball.radius <= 0 or ball.cx + ball.radius >= 100
+end
+function hit_y_boundary with ball do
+  return ball.cy - ball.radius <= 0 or ball.cy + ball.radius >= 100
+end
+function flip_x_velo with ball do
+  change ball.x_velocity to -ball.x_velocity
+end
+function flip_y_velo with ball do
+  change ball.y_velocity to -ball.y_velocity
+end
+function hit_bottom with block, ball do
+  set block_bottom to block.top + block.height
+  set ball_top to ball.cy - ball.radius
+  return ball_top <= block_bottom
+end
+function within_block_width with block, ball do
+  set left to block.left
+  set right to block.left + block.width
+  return ball.cx >= left and ball.cx <= right
+end
+function touching with ball, block do
+  return hit_bottom(block, ball) and within_block_width(block, ball)
+end
+function bounce with ball do
+  if hit_x_boundary(ball) do
+    flip_x_velo(ball)
+  end
+  if hit_y_boundary(ball) do
+    flip_y_velo(ball)
+  end
+end
+set ball to new Ball()
+set top to 31
+set left to 8
+set gap to 17
+set first_block to new Block(left, top)
+change left to left + gap
+set second_block to new Block(left, top)
+change left to left + gap
+set third_block to new Block(left, top)
+change left to left + gap
+set fourth_block to new Block(left, top)
+change left to left + gap
+set fifth_block to new Block(left, top)
+set blocks to [first_block, second_block, third_block, fourth_block, fifth_block]
+change ball.x_velocity to 1
+change ball.y_velocity to 1
+set unsmashed_blocks_remaining to false
+repeat_until_game_over do
+  change unsmashed_blocks_remaining to false
+  for each block in blocks do
+    log ball.cx
+    log ball.cy
+    if touching(ball, block) and !block.smashed do
+      flip_y_velo(ball)
+      change block.smashed to true
+    end
+    if !block.smashed do
+      change unsmashed_blocks_remaining to true
+    end
+  end
+  bounce(ball)
+  if !unsmashed_blocks_remaining do
+    break
+  end
+  move_ball(ball)
+end

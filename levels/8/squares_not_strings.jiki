@@ -1,0 +1,54 @@
+function is_safe with direction do
+  set square to look(direction)
+  set within_bounds to !square.is_wall and square.in_maze
+  set are_safe_contents to square.contents != "🔥" and square.contents != "💩" 
+  return within_bounds and are_safe_contents
+  
+end
+function can_turn_left do
+  return is_safe("left")
+end
+function can_move do
+  return is_safe("ahead")
+end
+function can_turn_right do
+  return is_safe("right")
+end
+
+function turn_around do
+  turn_right()
+  turn_right()
+end
+
+function grab_emojis with emoji_dict do
+  set emoji to look("down").contents
+  if emoji == "" do
+    return emoji_dict
+  end
+  if emoji != "⭐" and emoji != "🏁" and emoji != "⬜" do
+    if !has_key(emoji_dict, emoji) do
+      change emoji_dict[emoji] to 0
+    end
+    change emoji_dict[emoji] to emoji_dict[emoji] + 1
+    remove_emoji()
+  end
+  return emoji_dict
+end
+
+set emoji_dict to {}
+repeat_until_game_over do
+  change emoji_dict to grab_emojis(emoji_dict)
+  if can_turn_left() do
+    turn_left()
+    move()
+  else if can_move() do
+    move()
+  else if can_turn_right() do
+    turn_right()
+    move()
+  else do
+    turn_around()
+    move()
+  end
+end
+announce_emojis(emoji_dict)

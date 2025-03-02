@@ -1,0 +1,33 @@
+// House variables
+//set 
+// Draw the House
+set sky to new Sky(0)
+set roof to new Roof(50, 20, 60, 20, 3)
+set frame to new Frame(25, 40, 50, 40, 3)
+set left_window to new Window(30, 50, 10, 10, 3)
+set right_window to new Window(60, 50, 10, 10, 3)
+set door to new Door(45, 60, 14,18, 3)
+set ground to new Ground(20, 2)
+set sun to new Sun(80, 20, 10, 1)
+set brightness to 100
+// Animate the House
+repeat 200 times do
+  if sun.cx > -4 do
+    change sun.cx  to sun.cx - 1.2
+  else do
+    change left_window.lights to true
+    change right_window.lights to true
+    break
+  end
+  change sun.cy to sun.cy + 1
+  change sky.hue to min(310, sky.hue + 2)
+  
+  change ground.brightness to brightness
+  change sky.brightness to brightness
+  change roof.brightness to brightness
+  change frame.brightness to brightness
+  change door.brightness to brightness
+  if brightness > 20 do
+    change brightness to brightness - 1
+  end
+end

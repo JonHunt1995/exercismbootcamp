@@ -1,88 +1,93 @@
-// Code for Sunny Day
-function draw_sunny_day with scale do
+function draw_sky with scale, left, top do
   change scale to scale / 100
-  // Draw the sky
-  fill_color_hex("#ADD8E6") 
-  rectangle(0, 0, scale * 100, scale * 100)
+  fill_color_hex("#ADD8E6")
+  rectangle(left, top, scale * 100, scale * 100)
+end
+// Code for Sunny Day
+function draw_sunny_day with scale, left, top do
+  change scale to scale / 100
   // Draw the sun
   fill_color_hex("#ffed06")
-  circle(scale * 50,scale * 50, scale * 25)
+  circle(left + scale*50,top + scale*50, scale * 25)
 end
 // Partially Sunny
-function draw_partial_sun with scale, cy, cx do
+function draw_partial_sun with scale, left, top do
   change scale to scale / 100
   fill_color_hex("#ffed06")
-  circle(scale * 75, scale * 30, scale * 15)
+  circle(left + scale*75, top + scale*30, scale * 15)
 end
   // Clouds
-function draw_clouds with scale, cy, cx do
+function draw_clouds with scale, left, top do
   change scale to scale / 100
   fill_color_hex("white")
-  circle(55, 40, 20)
-  circle(40, 40, 15)
-  circle(25, 50, 10)
-  circle(75, 50, 10)
-  rectangle(25, 50, 50, 10)
+  circle(left + scale*55, top + scale*40, scale*20)
+  circle(left + scale*40, top + scale*40, scale*15)
+  circle(left + scale*25, top + scale*50, scale*10)
+  circle(left + scale*75, top + scale*50, scale*10)
+  rectangle(left + scale*25, top + scale*50, scale*50, scale*10)
 end
   // Rain Drops
-function draw_rain with scale, cy, cx do
+function draw_rain with scale, left, top do
+  change scale to scale / 100
   fill_color_hex("#4287f5")
-  ellipse(30, 70, 3, 5)
-  ellipse(40, 80, 3, 5)
-  ellipse(50, 70, 3, 5)
-  ellipse(60, 80, 3, 5)
-  ellipse(70, 70, 3, 5)
+  ellipse(left + scale*30, top + scale*70, scale*3, scale*5)
+  ellipse(left + scale*40, top + scale*80, scale*3, scale*5)
+  ellipse(left + scale*50, top + scale*70, scale*3, scale*5)
+  ellipse(left + scale*60, top + scale*80, scale*3, scale*5)
+  ellipse(left + scale*70, top + scale*70, scale*3, scale*5)
 end
 // Snow
-function draw_snow with scale, cy, cx do
+function draw_snow with scale, left, top do
+  change scale to scale / 100
   fill_color_hex("#4287f5")
-  circle(30, 70, 5)
-  circle(40, 80, 5)
-  circle(50, 70, 5)
-  circle(60, 80, 5)
-  circle(70, 70, 5)
+  circle(left + scale*30, top + scale*70, scale*5)
+  circle(left + scale*40, top + scale*80, scale*5)
+  circle(left + scale*50, top + scale*70, scale*5)
+  circle(left + scale*60, top + scale*80, scale*5)
+  circle(left + scale*70, top + scale*70, scale*5)
 end
-// The description_to_elements function takes in a description
-// and outputs weather elements
-function description_to_elements with weather_description do
-  set description to 1
-  set elements to 2
-  set description_to_elems_map to [["sunny", ["sun"]], ["dull", ["cloud"]],["miserable", ["cloud", "rain"]], ["hopeful", ["sun", "cloud"]], ["rainbow-territory", ["sun", "cloud", "rain"]], ["exciting", ["cloud", "snow"]], ["snowboarding-time", ["sun", "cloud", "snow"]]]
-  for each pair in description_to_elems_map do
-    if pair[description] == weather_description do
-      return pair[elements]
+
+function draw_symbol with description, scale, left, top do
+  draw_sky(scale, left, top)
+  if description == "sunny" do
+    draw_sunny_day(scale, left, top)
+  else if description == "dull" do
+    draw_clouds(scale, left, top)
+  else if description == "miserable" do
+    draw_clouds(scale, left, top)
+    draw_rain(scale, left, top)
+  else if description == "hopeful" do
+    draw_partial_sun(scale, left, top)
+    draw_clouds(scale, left, top)
+  else if description == "rainbow-territory" do
+    draw_partial_sun(scale, left, top)
+    draw_clouds(scale, left, top)
+    draw_rain(scale, left, top)
+  else if description == "exciting" do
+    draw_clouds(scale, left, top)
+    draw_snow(scale, left, top)
+  else if description == "snowboarding-time" do
+    draw_partial_sun(scale, left, top)
+    draw_clouds(scale, left, top)
+    draw_snow(scale, left, top)
+  end
+end
+function extract_description with json_data, year, month, day, time do
+  set summary to json_data["meteorological"][year][month][day]["weather"]["summary"]
+  for each snapshot in summary do
+    if snapshot["time"] == time do 
+      return snapshot["description"]
     end
   end
+  return ""
 end
-function extract_description with json_data, index do
-  set summary to json_data["meteorological"]["2025"]["02"]["25"]["weather"]["summary"]
-  return summary[index]["description"]
-end
-// The draw_weather function takes in a description string
-// and outputs a weather scene
+
 function draw_weather with json_data do 
-  set description to extract_description(json_data, 1)
-  log description
-  if description == "sunny" do
-    draw_sunny_day()
-  else if description == "dull" do
-    draw_clouds()
-  else if description == "miserable" do
-    draw_clouds()
-    draw_rain()
-  else if description == "hopeful" do
-    draw_partial_sun()
-    draw_clouds()
-  else if description == "rainbow-territory" do
-    draw_partial_sun()
-    draw_clouds()
-    draw_rain()
-  else if description == "exciting" do
-    draw_clouds()
-    draw_snow()
-  else if description == "snowboarding-time" do
-    draw_partial_sun()
-    draw_clouds()
-    draw_snow()
-  end
+  set weather_times to ["06:00", "07:00", "08:00", "09:00"]
+  set scales to [50, 30, 30, 30]
+  set lefts to [25, 1, 35, 69]
+  set tops to [4, 66, 66, 66]
+  for each time in weather_times indexed by index do
+    draw_symbol(extract_description(json_data, "2025", "02", "25", time), scales[index], lefts[index], tops[index])
+  end  
 end

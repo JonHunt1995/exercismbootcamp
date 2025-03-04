@@ -1,9 +1,107 @@
-function draw_board do
-  
+function write_screen with message, red, green, blue, alpha do
+  fill_color_rgba(red, green, blue, alpha)
+  rectangle(0, 0, 100, 100)
+  write(message)
 end
+
+function draw_board do
+  rectangle(5, 5, 90, 90)
+  line(5, 35, 95, 35)
+  line(5, 65, 95, 65)
+  line(35, 5, 35, 95)
+  line(65, 5, 65, 95)
+end
+
+function insert_o with row, column do
+  set x to 30 * (column - 1)
+  set y to 30 * (row - 1)
+  circle(20 + x, 20 + y, 10)
+end
+
+function insert_x with row, column do
+  set x to 30 * (column - 1)
+  set y to 30 * (row - 1)
+  line(10 + x, 10 + y, 30 + x, 30 + y)
+  line(10 + x, 30 + y, 30 +x, 10 + y)
+end
+
+function insert_letter with state, move, turn do
+  set square to state[move[1]][move[2]]
+  if  square == "X" or square == "O" do
+    return []
+  end
+  if turn % 2 != 0 do
+    insert_o(move[1], move[2])
+    change state[move[1]][move[2]]to "O"
+  else do
+    insert_x(move[1], move[2])
+    change state[move[1]][move[2]] to "X"
+  end
+  return state
+end
+
+function check_diagonals_win with state do
+  set downwards_slant to state[1][1] == state[2][2] and state[2][2] == state[3][3]
+  set upwards_slant to state[3][1] == state[2][2] and state[2][2] == state[1][3]
+  return downwards_slant or upwards_slant
+end
+
+function check_complete_row with state do
+  for each row in state do
+    if row[1] == row[2] and row[2] == row[3] do
+      return true
+    end
+  end
+  return false
+end
+
+function check_complete_col with state do
+  repeat 3 times indexed by col do
+    if state[1][col] == state[2][col] and state[2][col] == state[3][col] do
+      return true
+    end
+  end
+  return false
+end
+
+function has_won with state do
+  return check_diagonals_win(state) or check_complete_row(state) or check_complete_col(state)
+end
+
+function call_invalid_move do
+  write_screen("Invalid move!", 200, 0, 0, 0.85)
+end
+
+function call_win with state, turn do
+  if turn % 2 != 0 do
+    set win_msg to "The o's won!"
+  else do 
+    set win_msg to "The x's won!"
+  end
+  write_screen(win_msg, 96, 79, 205, 0.85)
+end
+function call_draw do
+  stroke_color_hex("grey")
+  write_screen("The game was a draw!", 96, 79, 205, 0.85)
+end
+
 function run_game with moves do
   log moves
-  if is_move_valid(moves) do
-    play(moves)
+  draw_board()
+  set state to [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
+  for each move in moves indexed by turn do
+    change state to insert_letter(state, move, turn)
+    if my#length(state) == 0 do
+      call_invalid_move()
+      break
+    end
+    if has_won(state) do
+      call_win(state, turn)
+    end
+    log state
+    if turn == 9 and !has_won(state) do
+      call_draw()
+      return
+    end
   end
 end

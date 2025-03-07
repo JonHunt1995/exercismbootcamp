@@ -1,0 +1,39 @@
+// Main Game Loop Functions
+function find_initial_coords with maze do
+  for each row in maze indexed by y_coord do
+    for each square in row indexed by x_coord do
+      if square.is_start do
+        return {"x": x_coord, "y": y_coord}
+      end
+    end
+  end
+  return {}
+end
+
+function extract_square with maze, coords do
+  return maze[coords["x"]][coords["y"]]
+end
+
+function grab_emoji with emoji_collection, square do
+  if 
+end
+// Game Loop
+set maze to get_initial_maze()
+log maze
+set coords to find_initial_coords(maze)
+log coords
+set emoji_collection to {}
+set square to extract_square(maze, coords)
+log square.is_start
+// direction is an enum with 
+// North -> 1
+// East -> 2
+// South -> 3
+// West -> 4
+set direction to 3 // Default to South
+repeat_until_game_over do
+  change square to extract_square(maze, coords)
+  grab_emoji(emoji_collection, square)
+  change direction to choose_next_path(maze, coords, direction)
+  move_switch(direction)
+end

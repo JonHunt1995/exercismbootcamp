@@ -1,3 +1,21 @@
+// Helper Functions
+function is_safe with maze, coords do
+  set square to maze["x"]["y"]
+  set within_x_range to coords["x"] >= 1 and coords["x"]
+  set within_bounds to within_x_range and within_y_range
+  set are_safe_contents to square.contents != "🔥" and square.contents != "💩" and !square.is_wall
+  return within_bounds and are_safe_contents
+end
+
+function get_directions do
+  // direction is an enum with 
+  // North -> 1
+  // East -> 2
+  // South -> 3
+  // West -> 4
+  return ["North", "East", "South", "West"]
+end
+
 // Main Game Loop Functions
 function find_initial_coords with maze do
   for each row in maze indexed by y_coord do
@@ -15,21 +33,24 @@ function extract_square with maze, coords do
 end
 
 function grab_emoji with emoji_collection, square do
-  if 
+  set emoji to square.contents
+  if emoji == ""
+    do return emoji_collection
+  end
+  if emoji != "⭐" and emoji != "🏁" and emoji != "⬜" do
+    if !my#has_key(emoji_collection, emoji) do
+      change emoji_collection[emoji] to 0
+    end
+    change emoji_collection[emoji] to emoji_collection[emoji] + 1
+    remove_emoji()
+  end
+  return emoji_collection
 end
 // Game Loop
 set maze to get_initial_maze()
-log maze
 set coords to find_initial_coords(maze)
-log coords
 set emoji_collection to {}
 set square to extract_square(maze, coords)
-log square.is_start
-// direction is an enum with 
-// North -> 1
-// East -> 2
-// South -> 3
-// West -> 4
 set direction to 3 // Default to South
 repeat_until_game_over do
   change square to extract_square(maze, coords)

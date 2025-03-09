@@ -1,10 +1,20 @@
 // Helper Functions
+function within_bounds with maze, coords do
+  if coords["x"] < 0 or coords["y"] < 0 do
+    return false
+  end
+  set maze_width to my#length(maze[1])
+  set maze_height to my#length(maze)
+  return coords["x"] <= maze_width and coords["y] <= maze_height
+end
+
+function are_safe_contents with square do
+  return square.contents != "🔥" and square.contents != "💩" and !square.is_wall
+end
+
 function is_safe with maze, coords do
   set square to maze["x"]["y"]
-  set within_x_range to coords["x"] >= 1 and coords["x"]
-  set within_bounds to within_x_range and within_y_range
-  set are_safe_contents to square.contents != "🔥" and square.contents != "💩" and !square.is_wall
-  return within_bounds and are_safe_contents
+  return within_bounds(maze, coords) and are_safe_contents(square)
 end
 
 function get_directions do
@@ -16,7 +26,10 @@ function get_directions do
   return ["North", "East", "South", "West"]
 end
 
+function get_cardinal_square
 // Main Game Loop Functions
+
+// Finds Coordinates Of Starting Square
 function find_initial_coords with maze do
   for each row in maze indexed by y_coord do
     for each square in row indexed by x_coord do
@@ -28,10 +41,12 @@ function find_initial_coords with maze do
   return {}
 end
 
+// Finds Square That Blob Is Standing On Based On Coordinates 
 function extract_square with maze, coords do
   return maze[coords["x"]][coords["y"]]
 end
 
+// Grabs Emoji On Square That Blob Is Standing On
 function grab_emoji with emoji_collection, square do
   set emoji to square.contents
   if emoji == ""
@@ -46,15 +61,59 @@ function grab_emoji with emoji_collection, square do
   end
   return emoji_collection
 end
+
+// Chooses Next Path by First Checking Left Of Blob,
+// In Front Of, To The Right Of, Then Behind
+function choose_next_path with maze, coords, direction do
+  set directions to get_directions()
+  set possible_path to directions[(4 + direction - 1) % 4] // Start at left path
+
+end
+
+// Determines whether to turn left, move forward,
+// right, or around based off of choose_next_path
+function move_switch with next do
+  if next == 1 do
+    turn_left()
+  else if next == 3 do
+    turn_right()
+  else if next == 4 do
+    turn_around()
+  end
+  move()
+end
+// Keeps track of the coordinates of the square that blob will jump into
+function update_coords with coords, direction, next do
+  set directions to get_directions()
+  set next_square to directions[(direction + next) % 4]
+  if next_square == "North" do
+   change coords["y"] to coords["y"] - 1
+  else if next_square == "East" do
+    change coords["x"] to coords["x"] + 1
+  else if next_square == "South" do
+    change coords["y"] to coords["y"] + 1
+  else if next_square == "West" do
+    change coords["x"] to coords["x"] - 1
+end
+
+function update_direction with direction, next do
+  // Updated direction will face the same way as what the blob is turning into 
+  // and then will turn left of that for next square to check as per the algo
+  return updated_direction to ((direction + next) % 4) - 1
+end
+
 // Game Loop
 set maze to get_initial_maze()
 set coords to find_initial_coords(maze)
 set emoji_collection to {}
 set square to extract_square(maze, coords)
 set direction to 3 // Default to South
+set next to 0
 repeat_until_game_over do
   change square to extract_square(maze, coords)
   grab_emoji(emoji_collection, square)
-  change direction to choose_next_path(maze, coords, direction)
-  move_switch(direction)
+  change next to choose_next_path(maze, coords, direction)
+  move_switch(next)
+  change coords to update_coords(coords, direction, next)
+  change direction to update_direction(direction, next)
 end

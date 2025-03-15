@@ -1,0 +1,104 @@
+function process_guess with target, guess do
+  set feedback to []
+  if guess
+  for each letter in target indexed by i do
+    if letter == guess[i] do
+      change feedback to push(feedback, "correct")
+    else if my#contains(target, guess[i]) do
+      change feedback to push(feedback, "present")
+    else do
+      change feedback to push(feedback, "absent")
+    end
+  end
+  return feedback
+end
+
+function all_correct with feedback do
+  for each state in feedback do
+    if state != "correct" do
+      return false
+    end
+  end
+  return true
+end
+
+function check_correct with word, guess, feedback do
+  for each letter in word indexed by i do
+    if feedback[i] == "correct" and word[i] != guess[i] do
+      return false
+    end
+  end
+  return true
+end
+
+function check_present with word, guess, feedback do
+  for each letter in word indexed by i do
+    if feedback[i] == "present" and (!my#contains(word, guess[i]) or letter == guess[i]) do
+      return false
+    end
+  end
+  return true
+end
+
+function check_absent with word, guess, feedback do
+  for each letter in word indexed by i do
+    if feedback[i] == "absent" and my#contains(word, guess[i]) do
+      return false
+    end
+  end
+  return true
+end
+function filter_correct with words, guess, feedback do
+  set filtered_words to []
+  for each word in words do
+    if check_correct(word, guess, feedback) do
+      change filtered_words to push(filtered_words, word)
+    end
+  end
+  return filtered_words
+end
+
+function filter_present with words, guess, feedback do
+  set filtered_words to []
+   for each word in words do
+    if check_present(word, guess, feedback) do
+      change filtered_words to push(filtered_words, word)
+    end
+  end
+  return filtered_words
+end
+
+function filter_absent with words, guess, feedback do
+  set filtered_words to []
+   for each word in words do
+    if check_absent(word, guess, feedback) do
+      change filtered_words to push(filtered_words, word)
+    end
+  end
+  return filtered_words
+end
+
+function filter_words with words, feedback do
+  set guess to words[1]
+  return filter_absent(filter_present(filter_correct(words, guess, feedback), guess, feedback), guess, feedback)
+end
+
+function process_game do
+  set game to new WordleGame()
+  set words to common_words()
+  set feedback to []
+  set target to game.target_word
+  set guess to ""
+  game.draw_board()
+  log my#length(words)
+  repeat 6 times indexed by row do
+    change guess to words[1]
+    change feedback to process_guess(target, guess)
+    change words to filter_words(words, feedback)
+    log my#length(words)
+    game.add_word(row, guess, feedback)
+    if all_correct(feedback) do
+      break
+    end
+  end
+end

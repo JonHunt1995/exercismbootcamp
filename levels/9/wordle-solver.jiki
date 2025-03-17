@@ -128,39 +128,15 @@ function check_absent with word, guess, feedback do
   end
   return true
 end
-function filter_correct with words, guess, feedback do
-  set filtered_words to []
-  for each word in words do
-    if check_correct(word, guess, feedback) do
-      change filtered_words to push(filtered_words, word)
-    end
-  end
-  return filtered_words
-end
 
-function filter_present with words, guess, feedback do
-  set filtered_words to []
+function filter_words with words, guess, feedback do
+ set filtered_words to []
    for each word in words do
-    if check_present(word, guess, feedback) do
+    if check_correct(word, guess, feedback) and check_present(word, guess, feedback) and check_absent(word, guess, feedback) do
       change filtered_words to push(filtered_words, word)
     end
   end
   return filtered_words
-end
-
-function filter_absent with words, guess, feedback do
-  set filtered_words to []
-   for each word in words do
-    if check_absent(word, guess, feedback) do
-      change filtered_words to push(filtered_words, word)
-    end
-  end
-  return filtered_words
-end
-
-function filter_words with words, feedback do
-  set guess to words[1]
-  return filter_absent(filter_present(filter_correct(words, guess, feedback), guess, feedback), guess, feedback)
 end
 
 function process_game do
@@ -174,7 +150,7 @@ function process_game do
   repeat 6 times indexed by row do
     change guess to words[1]
     change feedback to process_guess(target, guess)
-    change words to filter_words(words, feedback)
+    change words to filter_words(words, guess, feedback)
     change feedback to filter_maybes(feedback)
     log my#length(words)
     game.add_word(row, guess, feedback)

@@ -17,11 +17,26 @@ function find_letters_to_handle with target, guess do
 end
 
 function handle_correct_and_present with target, guess, letters_to_handle do
-
+  
 end
 
 function handle_multi_present with target, guess, letters_to_handle do
-
+  set highlight_yellow to true
+  set feedback to []
+  for each letter in guess indexed by i do
+    if letter == target[i] do
+      change feedback to push(feedback, "correct")
+    else if my#contains(letters_to_handle, letter) and highlight_yellow do
+      change feedback to push(feedback, "present")
+      change highlight_yellow to false
+    else if (my#contains(letters_to_handle, letter)) do
+      change feedback to push(feedback, "absent")
+    else if my#contains(target, letter) do
+      change feedback to push(feedback, "present")
+    else do
+      change feedback to push(feedback, "absent")
+    end
+  end
 end
 function handle_bonus_condition with target, guess, letters_to_handle do
   for each letter in guess indexed by i do
@@ -29,12 +44,10 @@ function handle_bonus_condition with target, guess, letters_to_handle do
       continue
     end
     if letter == target[i] do
-      log "correct"
-      //return handle_correct_and_present(target, guess, letters_to_handle)
+      return handle_correct_and_present(target, guess, letters_to_handle)
     end
   end
-  log "present"
-  //return handle_multi_present(target, guess, letters_to_handle)
+  return handle_multi_present(target, guess, letters_to_handle)
 end
 
 function process_guess with target, guess do

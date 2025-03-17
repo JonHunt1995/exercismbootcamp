@@ -1,6 +1,86 @@
+function find_letters_to_handle with target, guess do
+  set letters_to_handle to []
+  set guess_letters to my#letter_count(guess)
+  set target_letters to my#letter_count(target)
+  set target_has_letter to false
+  set guess_has_more to false
+  for each letter in guess do
+    change target_has_letter to my#has_key(target_letters, letter)
+    if target_has_letter do
+      change guess_has_more to guess_letters[letter] == target_letters[letter] + 1
+    end
+    if target_has_letter and guess_has_more do
+      change letters_to_handle to push(letters_to_handle, letter)
+    end
+  end
+  return letters_to_handle
+end
+
+function filter_maybes with feedback do
+  set output to []
+  for each item in feedback do
+    if item == "maybe" or item == "maybe not" do
+      change item to "absent"
+    end
+    change output to push(output, item)
+  end
+  return output
+end
+function handle_correct_and_present with target, guess, letters_to_handle do
+  set feedback to []
+  for each letter in guess indexed by i do
+    if letter == target[i] do
+      change feedback to push(feedback, "correct")
+    else if my#contains(letters_to_handle, letter) do
+      change feedback to push(feedback, "maybe not")
+    else if my#contains(target, letter) do 
+      change feedback to push(feedback, "present")
+    else do
+      change feedback to push(feedback, "absent")
+    end
+  end
+  return feedback
+end
+
+function handle_multi_present with target, guess, letters_to_handle do
+  set highlight_yellow to true
+  set feedback to []
+  for each letter in guess indexed by i do
+    if letter == target[i] do
+      change feedback to push(feedback, "correct")
+    else if my#contains(letters_to_handle, letter) and highlight_yellow do
+      change feedback to push(feedback, "present")
+      change highlight_yellow to false
+    else if (my#contains(letters_to_handle, letter)) do
+      change feedback to push(feedback, "maybe")
+    else if my#contains(target, letter) do
+      change feedback to push(feedback, "present")
+    else do
+      change feedback to push(feedback, "absent")
+    end
+  end
+  return feedback
+end
+
+function handle_bonus_condition with target, guess, letters_to_handle do
+  for each letter in guess indexed by i do
+    if !my#contains(letters_to_handle, letter) do
+      continue
+    end
+    if letter == target[i] do
+      return handle_correct_and_present(target, guess, letters_to_handle)
+    end
+  end
+  return handle_multi_present(target, guess, letters_to_handle)
+end
+
 function process_guess with target, guess do
   set feedback to []
-  if guess
+  set letters_to_handle to find_letters_to_handle(target, guess)
+  set check_for_bonus_condition to my#length(letters_to_handle) > 0
+  if check_for_bonus_condition do
+    return handle_bonus_condition(target, guess, letters_to_handle)
+  end
   for each letter in target indexed by i do
     if letter == guess[i] do
       change feedback to push(feedback, "correct")
@@ -42,7 +122,7 @@ end
 
 function check_absent with word, guess, feedback do
   for each letter in word indexed by i do
-    if feedback[i] == "absent" and my#contains(word, guess[i]) do
+    if (feedback[i] == "absent" or (feedback[i] == "maybe not" and word[i] == guess[i])) and my#contains(word, guess[i]) do
       return false
     end
   end
@@ -95,6 +175,7 @@ function process_game do
     change guess to words[1]
     change feedback to process_guess(target, guess)
     change words to filter_words(words, feedback)
+    change feedback to filter_maybes(feedback)
     log my#length(words)
     game.add_word(row, guess, feedback)
     if all_correct(feedback) do

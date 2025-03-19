@@ -1,0 +1,107 @@
+function hit_x_boundary with ball do
+  return ball.cx - ball.radius <= 0 or ball.cx + ball.radius >= 100
+end
+
+function hit_y_boundary with ball do
+  return ball.cy - ball.radius <= 0 or ball.cy + ball.radius >= 100
+end
+
+function flip_x_velo with ball do
+  change ball.x_velocity to -ball.x_velocity
+end
+
+function flip_y_velo with ball do
+  change ball.y_velocity to -ball.y_velocity
+end
+
+function hit_bottom with block, ball do
+  set block_bottom to block.top + block.height
+  set ball_top to ball.cy - ball.radius
+  return ball_top <= block_bottom
+end
+
+function hit_top with block, ball do
+  set block_top to block.top
+  set ball_bottom to ball.cy + ball.radius
+  return ball_bottom >= block_top
+end
+
+function within_block_width with block, ball do
+  set left to block.left
+  set right to block.left + block.width
+  return ball.cx >= left and ball.cx <= right
+end
+
+function touching with ball, block do
+  return hit_bottom(block, ball) and within_block_width(block, ball)
+end
+
+function bounce with ball do
+  if hit_x_boundary(ball) do
+    flip_x_velo(ball)
+  end
+  if hit_y_boundary(ball) do
+    flip_y_velo(ball)
+  end
+end
+
+function hit_paddle with paddle, ball do
+  set ball_bottom to ball.cy + ball.radius
+  set paddle_top to 
+function move_towards_center with paddle do
+  if paddle.cx < 50 and paddle.cx < 99 - paddle.width / 2 do
+    paddle.move_right()
+  else if paddle.cx > 50 and paddle.cx > paddle.width / 2 do
+    paddle.move_left()
+  end
+end
+
+function move_towards_ball with paddle, ball do
+  if paddle.cx < ball.cx and paddle.cx < 99 - paddle.width / 2 do
+    paddle.move_right()
+  else if paddle.cx > ball.cx and paddle.cx > 1 + paddle.width / 2 do
+    paddle.move_left()
+  end
+end
+
+function move_paddle with paddle, ball do
+  if ball.y_velocity == 1 do
+    move_towards_center(paddle)
+  else do
+    move_towards_ball(paddle, ball)
+  end
+end
+//Setting Up Game Objects
+set game to new Game()
+set ball to game.ball
+set paddle to game.paddle
+set top to 28
+set left to 8
+set gap to 17
+set blocks to game.blocks
+repeat 5 times do
+  game.add_block(new Block(left, top))
+  change left to left + gap
+end
+change ball.x_velocity to 1
+change ball.y_velocity to -1
+set unsmashed_blocks_remaining to false
+repeat_until_game_over do
+  change unsmashed_blocks_remaining to false
+  for each block in blocks do
+    move_paddle(paddle, ball)
+  
+    if touching(ball, block) and !block.smashed do
+      flip_y_velo(ball)
+      change block.smashed to true
+    end
+    if !block.smashed do
+      change unsmashed_blocks_remaining to true
+    end
+  end
+  bounce(ball)
+  if !unsmashed_blocks_remaining do
+    break
+  end
+  ball.move()
+end

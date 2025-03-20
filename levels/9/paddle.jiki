@@ -22,7 +22,6 @@ function hit_block with block, ball do
   return ball_top <= block_bottom and ball_bottom >= block_top
 end
 
-
 function within_block_width with block, ball do
   set left to block.left
   set right to block.left + block.width
@@ -89,7 +88,7 @@ repeat 5 times do
   change left to left + gap
 end
 change ball.x_velocity to 1
-change ball.y_velocity to -1
+change ball.y_velocity to 1
 set unsmashed_blocks_remaining to false
 repeat_until_game_over do
   change unsmashed_blocks_remaining to false
